@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2026 願景版 | 精緻顯化儀表板</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;700&family=Noto+Sans+TC:wght@300;400&display=swap');
+        
+        :root {
+            --cream: #FDFBF7;
+            --taupe: #8D7B68;
+            --soft-brown: #C8B6A6;
+            --text-main: #483C32;
+        }
+
+        body { 
+            font-family: 'Noto Sans TC', sans-serif; 
+            background-color: var(--cream); 
+            color: var(--text-main);
+            background-image: radial-gradient(#e5e7eb 0.5px, transparent 0.5px);
+            background-size: 24px 24px;
+        }
+
+        h1, h2, .serif { font-family: 'Noto Serif TC', serif; }
+
+        .glass-card { 
+            background: rgba(255, 255, 255, 0.85); 
+            backdrop-filter: blur(10px); 
+            border: 1px solid rgba(200, 182, 166, 0.2); 
+            border-radius: 2rem; 
+            box-shadow: 0 10px 30px -10px rgba(141, 123, 104, 0.1);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); 
+        }
+
+        .glass-card:hover { 
+            transform: translateY(-8px); 
+            box-shadow: 0 20px 40px -15px rgba(141, 123, 104, 0.15);
+            border-color: var(--soft-brown);
+        }
+
+        .vision-img-wrapper { 
+            width: 100%; 
+            aspect-ratio: 4/5;
+            border-radius: 1.5rem; 
+            cursor: pointer; 
+            background: #F3F0EC; 
+            overflow: hidden; 
+            position: relative;
+            border: 1px solid rgba(200, 182, 166, 0.1);
+        }
+
+        .vision-img-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .upload-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(141, 123, 104, 0.3);
+            opacity: 0;
+            transition: opacity 0.3s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            gap: 8px;
+        }
+
+        .vision-img-wrapper:hover .upload-overlay { opacity: 1; }
+
+        input[type="file"] { display: none; }
+
+        [contenteditable="true"]:focus {
+            outline: none;
+            background: rgba(200, 182, 166, 0.1);
+            border-radius: 4px;
+        }
+
+        .accent-line {
+            width: 40px;
+            height: 2px;
+            background-color: var(--soft-brown);
+            margin: 1.5rem auto;
+        }
+    </style>
+</head>
+<body class="p-6 md:p-12 lg:p-16">
+
+    <header class="max-w-6xl mx-auto text-center mb-16">
+        <span class="uppercase tracking-widest text-xs text-stone-400 mb-2 block">The Life You've Achieved</span>
+        <h1 class="text-4xl md:text-5xl font-bold text-stone-800 mb-4">
+            2026 Tiffany已實現
+        </h1>
+        <div class="accent-line"></div>
+        <p class="text-stone-500 font-light italic text-lg">「氣場強大、穩定、成功蛻變。」</p>
+    </header>
+
+    <main id="vision-board" class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+        </main>
+
+    <footer class="mt-24 text-center text-stone-400 text-sm font-light pb-12">
+        <p>每一天，我都在向這個版本邁進</p>
+        <p class="mt-2 opacity-60">※ 點擊圖片更換照片，點擊標題或內文可直接編輯（自動儲存至瀏覽器）</p>
+    </footer>
+
+    <script>
+        // 初始願景數據
+        const initialData = [
+            { 
+                id: 1, 
+                title: "工作：S級員工 & 管理躍遷", 
+                content: "2026H1 S級員工、OWS耳機跳邊增量達成、Level 6 升遷（帶領4人/3品類）。", 
+                img: "https://r2.erweima.ai/i/6h4D5B-4SaeVjA52YF26Lg.png" 
+            },
+            { 
+                id: 2, 
+                title: "情感：優質理想伴侶", 
+                content: "遇見並認識優質理想的另一半，共同經營充滿愛的穩定關係。", 
+                img: "https://r2.erweima.ai/i/W2K58Bv-R_uN7E064I78QA.png"
+            },
+            { 
+                id: 3, 
+                title: "修行：真人靈合一", 
+                content: "固定打坐，與本靈緣真人靈合一。氣場穩定，成功蛻變為領導力管理者。", 
+                img: "https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=800" 
+            },
+            { 
+                id: 4, 
+                title: "副業：GTM 出海 & AI", 
+                content: "副業 GTM 出海品牌實戰 + AI 課程模組化。開啟諮詢服務，實現價值變現。", 
+                img: "https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&w=800" 
+            },
+            { 
+                id: 5, 
+                title: "運動：強大體魄與精神", 
+                content: "身體變得更強壯，精神更好。維持極致的專注力與高效能量狀態。", 
+                img: "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=800" 
+            },
+            { 
+                id: 6, 
+                title: "核心目標：2026 全面達成", 
+                content: "耳機全年目標達成、Charging 份額超越綠聯。全方位成就解鎖。", 
+                img: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=800" 
+            }
+        ];
+
+        // 讀取本地儲存
+        let visions = JSON.parse(localStorage.getItem('my2026Visions_Cream')) || initialData;
+        const board = document.getElementById('vision-board');
+
+        function renderBoard() {
+            board.innerHTML = '';
+            visions.forEach((v, index) => {
+                const card = document.createElement('div');
+                card.className = 'glass-card p-6 flex flex-col';
+                card.innerHTML = `
+                    <div class="mb-6">
+                        <label for="file-${v.id}" class="vision-img-wrapper">
+                            <img src="${v.img}" id="img-${v.id}" onerror="this.src='https://via.placeholder.com/400x500?text=Please+Upload+Image'">
+                            <div class="upload-overlay">
+                                <i class="fas fa-camera text-2xl"></i>
+                                <span class="text-xs uppercase tracking-widest">Update Photo</span>
+                            </div>
+                        </label>
+                        <input type="file" id="file-${v.id}" accept="image/*" onchange="handleUpload(event, ${index})">
+                    </div>
+                    <div class="flex-grow">
+                        <h3 class="serif text-xl font-bold text-stone-700 mb-3" contenteditable="true" onblur="updateText(${index}, 'title', this.innerText)">${v.title}</h3>
+                        <p class="text-stone-500 text-sm font-light leading-relaxed mb-4" contenteditable="true" onblur="updateText(${index}, 'content', this.innerText)">${v.content}</p>
+                    </div>
+                `;
+                board.appendChild(card);
+            });
+        }
+
+        function handleUpload(event, index) {
+            const file = event.target.files[0];
+            if (file) {
+                if (file.size > 2 * 1024 * 1024) {
+                    alert("為了確保儲存順暢，請上傳小於 2MB 的圖片唷！");
+                    return;
+                }
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    try {
+                        visions[index].img = e.target.result;
+                        saveData();
+                        renderBoard();
+                    } catch (err) {
+                        alert("儲存空間已滿，請嘗試更換較小的圖片檔案。");
+                    }
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function updateText(index, field, value) {
+            visions[index][field] = value;
+            saveData();
+        }
+
+        function saveData() {
+            localStorage.setItem('my2026Visions_Cream', JSON.stringify(visions));
+        }
+
+        renderBoard();
+    </script>
+</body>
+</html>
